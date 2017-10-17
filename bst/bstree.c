@@ -33,7 +33,7 @@ void tFree(Treeptr tp){
   free(tp);
 }
 
-void tInsert(Treeptr tp, char *name){
+Treeptr tInsert(Treeptr tp, char *name){
   /* Printing action */
   printf("\nInserting %s into tree.\n", name); 
   if(strcmp(tp->name, name) < 0){
@@ -41,7 +41,7 @@ void tInsert(Treeptr tp, char *name){
       tp->left = tNewNode(name); 
     }
     else {
-      tInsert(tp->left, name);
+      return tInsert(tp->left, name);
     }
   }
   else {
@@ -49,26 +49,32 @@ void tInsert(Treeptr tp, char *name){
       tp->right = tNewNode(name); 
     }
     else {
-      tInsert(tp->right, name);
+      return tInsert(tp->right, name);
     }
   }
+  return tp;
    
 }
 
-void tRemove(Treeptr root, char *name){
+Treeptr tRemove(Treeptr root, char *name){
   /* Printing action */
+  
   printf("\nRemoving %s from tree...\n", name); 
+  if(root == NULL){
+    return NULL;
+  }
+ 
   /* find node */ 
   int res = strcmp(root->name, name); 
   Treeptr promotee;
   
   if(res < 0){        // need to check root->left for match
     printf("\t%s to left of current node, calling remove on left child.\n", name);
-    tRemove(root->left, name);
+    root->left = tRemove(root->left, name);
   }
   else if (res > 0){ // need to check root->right for match
     printf("\t%s to right of current node, calling remove on right child.\n", name);
-    tRemove(root->right, name);
+    root->right =  tRemove(root->right, name);
     printf("\troot->right ptr after calling remove on right child: %s\n",root->right); 
   }
   else{                                                                          //find node for promoting to current position
@@ -79,16 +85,18 @@ void tRemove(Treeptr root, char *name){
       promotee = root->right;
       printf("\t\tpromotee pointer after getting root->right: %s\n", promotee);
       tFree(root);
-      root = promotee;                                                           // if I was returning a pointer, I could just return the
+      root = promotee;                                                          
       printf("\t\troot pointer after getting promotee: %s\n", root);
+      //return root;
 
-                                                                                 // promotee as the result...
+
     }
     else if(root->right == NULL){
       printf("\t\tRight child is null. Promoting left child. \n");
       promotee = root->left;
       tFree(root);
       root = promotee;
+      //return root;
     }
     else{ // find promotee using in-order traversal
       Treeptr prev = NULL;
@@ -101,17 +109,18 @@ void tRemove(Treeptr root, char *name){
       root->name = promotee->name; // promote node to present
       //strcpy(root->name, promotee->name);
       if(prev){ // remove promoted node from other location
-        tRemove(prev->left, prev->left->name);
+        prev->left = tRemove(prev->left, prev->left->name);
       }
       else{
-	tRemove(root->right, root->right->name);
+	root->right = tRemove(root->right, root->right->name);
       } 
     }
   }
+  return root;
 }
 
   /* Prints all names in the tree */
-  /*void tPrint(){
+  /*Treeptr tPrint(){
     printf("tPrint\n"); 
     }*/
   void treePrint(Treeptr tp){

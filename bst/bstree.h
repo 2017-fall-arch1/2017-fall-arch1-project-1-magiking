@@ -25,16 +25,16 @@ Treeptr tNewNode(char *name);
 void tFree(Treeptr tp);
 
 /* insert a new leaf to the Tree sorted by lastname */
-void tInsert(Treeptr tp, char *name);
+Treeptr tInsert(Treeptr tp, char *name);
 
 /* removes a node from the tree */
-void tRemove(Treeptr root, char *name);
+Treeptr tRemove(Treeptr root, char *name);
 
 /* prints all of the members of tree */
 void treePrint(Treeptr tp);
-//void tPrint();
+//Treeptr tPrint();
 
 /* writes the current tree to a file */
-//void tWrite(Treeptr, /* file name */ );
+//Treeptr tWrite(Treeptr, /* file name */ );
 
 #endif /* included */ 
