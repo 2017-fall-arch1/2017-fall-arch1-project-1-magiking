@@ -35,22 +35,17 @@ void tFree(Treeptr tp){
 
 Treeptr tInsert(Treeptr tp, char *name){
   /* Printing action */
-  printf("\nInserting %s into tree.\n", name); 
+  printf("\nInserting %s into tree...\n", name); 
+
+  if(tp == NULL){
+    return tNewNode(name);
+  }
+
   if(strcmp(tp->name, name) < 0){
-    if(tp->left == NULL){
-      tp->left = tNewNode(name); 
-    }
-    else {
-      return tInsert(tp->left, name);
-    }
+    return tInsert(tp->left, name);
   }
   else {
-    if(tp->right == NULL){
-      tp->right = tNewNode(name); 
-    }
-    else {
-      return tInsert(tp->right, name);
-    }
+    return tInsert(tp->right, name);
   }
   return tp;
    
@@ -123,14 +118,53 @@ Treeptr tRemove(Treeptr root, char *name){
   /*Treeptr tPrint(){
     printf("tPrint\n"); 
     }*/
-  void treePrint(Treeptr tp){
-    if(tp){ // tp != NULL
-      printf("%s\n", tp->name); 
-      printf("calling treePrint on left\n");
-      treePrint(tp->left);
-      printf("calling treePrint on right\n");
-      treePrint(tp->right);
-      }
-  } 
-   
+void treePrint(Treeptr tp){
+  if(tp){ // tp != NULL
+    printf("%s\n", tp->name); 
+    printf("calling treePrint on left\n");
+    treePrint(tp->left);
+    printf("calling treePrint on right\n");
+    treePrint(tp->right);
+    }
+} 
+/* uses fputs to write names to a file in pre: order fasion*/
+void tPrintFile(Treeptr root, FILE *fp){
+  if(root){
+    fputs(root->name, fp);
+    tPrintFile(root->left, fp);
+    tPrintFile(root->right, fp);
+  }
+}
 
+/* writes the current tree to a file */
+void tWrite(Treeptr root, char *filename){
+  FILE *fp;
+  fp = fopen(filename, "w");
+  tPrintFile(root, fp); 
+  fclose(fp);
+}
+   
+/* builds a bst from a file */
+Treeptr tRead(char *filename){
+  Treeptr root;
+  FILE *fp;
+  fp = fopen(filename, "r");
+  char *line;
+ 
+  while(fgets(line, 30, fp)){
+    root = tInsert(root, line);
+  }
+
+  fclose(fp);
+  return root;
+}
+
+/* Removes all nodes from a tree */
+void tRemoveAll(Treeptr root){
+  if(root){
+    tRemoveAll(root->left);
+    tRemoveAll(root->right);
+    tFree(root); 
+  }
+  //return root;
+}

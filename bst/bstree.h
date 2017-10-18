@@ -32,9 +32,17 @@ Treeptr tRemove(Treeptr root, char *name);
 
 /* prints all of the members of tree */
 void treePrint(Treeptr tp);
-//Treeptr tPrint();
+
+/* uses fputs to write names to a file in pre: order fasion*/
+void tPrintFile(Treeptr root, FILE *fp);
 
 /* writes the current tree to a file */
-//Treeptr tWrite(Treeptr, /* file name */ );
+void tWrite(Treeptr, char *filename);
+
+/* builds a bst from a file */
+Treeptr tRead(char *filename);
+
+/* frees all nodes from a tree discarding items they contained */
+void tRemoveAll(Treeptr root);
 
 #endif /* included */ 
