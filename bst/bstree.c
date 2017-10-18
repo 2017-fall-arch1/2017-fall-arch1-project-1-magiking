@@ -17,11 +17,8 @@ Treeptr tAlloc(){
 /* creates a new node with name, gets space using tAlloc */
 Treeptr tNewNode(char *name){
   /* Printing action */
-  printf("\nEntering tNewNode. Calling tAlloc()...\n"); 
+  //printf("\nEntering tNewNode. Calling tAlloc()...\n"); 
   Treeptr tp = tAlloc();
-  printf("assigning %s to new node.\n", name); 
-  //tp->name = name;
-  printf("%s into tp->name", name);
   strcpy(tp->name, name); // seg fault here...
   tp->left = NULL;
   tp->right = NULL;
@@ -36,31 +33,18 @@ void tFree(Treeptr tp){
 
 Treeptr tInsert(Treeptr tp, char *name){
   /* Printing action */
-  printf("\nInserting %s into tree...\n", name); 
+  //printf("\nInserting %s into tree...\n", name); 
 
   if(tp == NULL){
-    printf("\t tp null\n");
     return tNewNode(name);
   }
 
   if(strcmp(tp->name, name) < 0){
      
     tp->left = tInsert(tp->left, name);
-    /*if(tp->left == NULL){
-      tp->left = tNewNode(name);
-    } 
-    else{
-      return tInsert(tp->left, name);
-      }*/
   }
   else {
     tp->right = tInsert(tp->right, name);
-    /*if(tp->right == NULL){
-      tp->right = tNewNode(name);
-    }
-    else{
-      return tInsert(tp->right, name);
-      }*/
   }
   return tp;
    
@@ -69,44 +53,37 @@ Treeptr tInsert(Treeptr tp, char *name){
 Treeptr tRemove(Treeptr root, char *name){
   /* Printing action */
   
-  printf("\nRemoving %s from tree...\n", name); 
+  //printf("\nRemoving %s from tree...\n", name); 
   if(root == NULL){
     return NULL;
   }
  
   /* find node */ 
-  int res = strcmp(root->name, name); 
+  int res = strcmp(name, root->name); 
   Treeptr promotee;
   
-  if(res < 0){        // need to check root->left for match
-    printf("\t%s to left of current node, calling remove on left child.\n", name);
+  if(res < 0){        
     root->left = tRemove(root->left, name);
   }
-  else if (res > 0){ // need to check root->right for match
-    printf("\t%s to right of current node, calling remove on right child.\n", name);
+  else if (res > 0){ 
     root->right =  tRemove(root->right, name);
-    printf("\troot->right ptr after calling remove on right child: %s\n",root->right); 
   }
   else{                                                                          //find node for promoting to current position
-    printf("\t%s is name of current node. Finding child to promote.\n", name);
-    if(root->left == NULL){                                                      // promote right node
-      printf("\t\tLeft child is null. Promoting right child. \n");
-                                                                                 //printf("right child pointer: %s\n", root->right);
-      promotee = root->right;
-      printf("\t\tpromotee pointer after getting root->right: %s\n", promotee);
+    if(root->left == NULL){                                                      // promote right node 
+      promotee = root->right;  
       tFree(root);
       root = promotee;                                                          
-      printf("\t\troot pointer after getting promotee: %s\n", root);
-      //return root;
+   
+    
 
 
     }
     else if(root->right == NULL){
-      printf("\t\tRight child is null. Promoting left child. \n");
+      
       promotee = root->left;
       tFree(root);
       root = promotee;
-      //return root;
+     
     }
     else{ // find promotee using in-order traversal
       Treeptr prev = NULL;
@@ -117,8 +94,6 @@ Treeptr tRemove(Treeptr root, char *name){
 	promotee = promotee->left;
       }
       strcpy(root->name, promotee->name);
-      //root->name = promotee->name; // promote node to present
-      //strcpy(root->name, promotee->name);
       if(prev){ // remove promoted node from other location
         prev->left = tRemove(prev->left, prev->left->name);
       }
@@ -130,16 +105,11 @@ Treeptr tRemove(Treeptr root, char *name){
   return root;
 }
 
-  /* Prints all names in the tree */
-  /*Treeptr tPrint(){
-    printf("tPrint\n"); 
-    }*/
+/* Prints all names in the tree */
 void tPrint(Treeptr tp){
   if(tp){ // tp != NULL
     printf("%s\n", tp->name); 
-    printf("calling tPrint on left\n");
     tPrint(tp->left);
-    printf("calling tPrint on right\n");
     tPrint(tp->right);
   }
 } 
@@ -162,23 +132,19 @@ void tWrite(Treeptr root, char *filename){
    
 /* builds a bst from a file */
 Treeptr tRead(char *filename){
-  printf("entering tRead\n");
+  printf("Reading %s\n", filename);
   Treeptr root = NULL;
   FILE *fp;
-  printf("\t opeing file %s\n", filename);
   fp = fopen(filename, "r");
   if(fp == NULL){
     printf("\tcan't open %s\n", filename);
   }
   char name[MAX_NAME];
  
-  printf("\t fgets called\n");
   while(fgets(name, MAX_NAME, fp)){
-    printf("\t\t tInsert called");
     root = tInsert(root, name);
   }
 
-  printf("\t fclose(fp)\n");
   fclose(fp);
   return root;
 }

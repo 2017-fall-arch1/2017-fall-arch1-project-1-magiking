@@ -9,6 +9,12 @@ CFLAGS=-g -O3
 bstDemo: bstree.o bstDemo.o
 	cc $^ -o $@
 
+personel: personel.o bstree.o
+	cc $^ -o $@	
+
+personel.o: personel.c personel.h bstree.o
+	cc -c $(CFLAGS) personel.c personel.h bstree.o
+
 bstree.o: bstree.c bstree.h
 	cc -c $(CFLAGS) bstree.c bstree.h
 
@@ -16,9 +22,10 @@ bstDemo.o: bstDemo.c bstree.h
 	cc -c $(CFLAGS) bstDemo.c
 
 clean:
-	rm -f *.o bstDemo
+	rm -f *.o bstDemo personel
 
 demo: bstDemo
 	./bstDemo
-#	(echo first; echo "second line"; echo "third and last") | ./bstDemo
 
+run: personel
+	./personel
