@@ -1,15 +1,17 @@
 #ifndef bintree_included
 #define bintree_included
 
+#define MAX_NAME 30
+
 /* a pointer to Treenode */
 typedef struct tnode *Treeptr;
 
 /* */
-//#define NAME_SIZE 40
+#define NAME_SIZE 40
 
 /* a binary tree node */
 typedef struct tnode {
-  char *name;
+  char name[NAME_SIZE];
 
   Treeptr left;
   Treeptr right;

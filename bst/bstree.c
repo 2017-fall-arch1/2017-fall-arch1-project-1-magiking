@@ -20,8 +20,9 @@ Treeptr tNewNode(char *name){
   printf("\nEntering tNewNode. Calling tAlloc()...\n"); 
   Treeptr tp = tAlloc();
   printf("assigning %s to new node.\n", name); 
-  tp->name = name;
-  //tp->name = strcpy(tp->name, name); // seg fault here...
+  //tp->name = name;
+  printf("%s into tp->name", name);
+  strcpy(tp->name, name); // seg fault here...
   tp->left = NULL;
   tp->right = NULL;
   return tp;
@@ -38,14 +39,28 @@ Treeptr tInsert(Treeptr tp, char *name){
   printf("\nInserting %s into tree...\n", name); 
 
   if(tp == NULL){
+    printf("\t tp null\n");
     return tNewNode(name);
   }
 
   if(strcmp(tp->name, name) < 0){
-    return tInsert(tp->left, name);
+     
+    tp->left = tInsert(tp->left, name);
+    /*if(tp->left == NULL){
+      tp->left = tNewNode(name);
+    } 
+    else{
+      return tInsert(tp->left, name);
+      }*/
   }
   else {
-    return tInsert(tp->right, name);
+    tp->right = tInsert(tp->right, name);
+    /*if(tp->right == NULL){
+      tp->right = tNewNode(name);
+    }
+    else{
+      return tInsert(tp->right, name);
+      }*/
   }
   return tp;
    
@@ -101,7 +116,8 @@ Treeptr tRemove(Treeptr root, char *name){
 	prev = promotee;
 	promotee = promotee->left;
       }
-      root->name = promotee->name; // promote node to present
+      strcpy(root->name, promotee->name);
+      //root->name = promotee->name; // promote node to present
       //strcpy(root->name, promotee->name);
       if(prev){ // remove promoted node from other location
         prev->left = tRemove(prev->left, prev->left->name);
@@ -125,7 +141,7 @@ void treePrint(Treeptr tp){
     treePrint(tp->left);
     printf("calling treePrint on right\n");
     treePrint(tp->right);
-    }
+  }
 } 
 /* uses fputs to write names to a file in pre: order fasion*/
 void tPrintFile(Treeptr root, FILE *fp){
@@ -146,15 +162,23 @@ void tWrite(Treeptr root, char *filename){
    
 /* builds a bst from a file */
 Treeptr tRead(char *filename){
-  Treeptr root;
+  printf("entering tRead\n");
+  Treeptr root = NULL;
   FILE *fp;
+  printf("\t opeing file %s\n", filename);
   fp = fopen(filename, "r");
-  char *line;
+  if(fp == NULL){
+    printf("\tcan't open %s\n", filename);
+  }
+  char name[MAX_NAME];
  
-  while(fgets(line, 30, fp)){
-    root = tInsert(root, line);
+  printf("\t fgets called\n");
+  while(fgets(name, MAX_NAME, fp)){
+    printf("\t\t tInsert called");
+    root = tInsert(root, name);
   }
 
+  printf("\t fclose(fp)\n");
   fclose(fp);
   return root;
 }
