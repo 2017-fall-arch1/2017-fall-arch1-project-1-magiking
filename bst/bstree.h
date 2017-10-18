@@ -33,7 +33,7 @@ Treeptr tInsert(Treeptr tp, char *name);
 Treeptr tRemove(Treeptr root, char *name);
 
 /* prints all of the members of tree */
-void treePrint(Treeptr tp);
+void tPrint(Treeptr tp);
 
 /* uses fputs to write names to a file in pre: order fasion*/
 void tPrintFile(Treeptr root, FILE *fp);

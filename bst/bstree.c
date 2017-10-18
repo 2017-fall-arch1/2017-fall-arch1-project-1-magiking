@@ -134,13 +134,13 @@ Treeptr tRemove(Treeptr root, char *name){
   /*Treeptr tPrint(){
     printf("tPrint\n"); 
     }*/
-void treePrint(Treeptr tp){
+void tPrint(Treeptr tp){
   if(tp){ // tp != NULL
     printf("%s\n", tp->name); 
-    printf("calling treePrint on left\n");
-    treePrint(tp->left);
-    printf("calling treePrint on right\n");
-    treePrint(tp->right);
+    printf("calling tPrint on left\n");
+    tPrint(tp->left);
+    printf("calling tPrint on right\n");
+    tPrint(tp->right);
   }
 } 
 /* uses fputs to write names to a file in pre: order fasion*/

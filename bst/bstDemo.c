@@ -6,14 +6,14 @@
 int main(){
   
   //printf("demo, making node");
-  Treeptr proot = tRead("./demo.txt");
+  Treeptr proot = tRead("./demo.bst");
   printf("\nPrinting tree\n"); 
-  treePrint(proot);
+  tPrint(proot);
 
-  proot = tInsert(proot, "Lincoln Barnes"); 
+  proot = tInsert(proot, "Lincoln Barnes\n"); 
 
   printf("\nPrinting tree\n"); 
-  treePrint(proot);
+  tPrint(proot);
 
   printf("\nwriting to file\n");
   tWrite(proot, "write_demo.bst");
